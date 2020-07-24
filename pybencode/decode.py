@@ -38,9 +38,8 @@ def to_int(bencode):
   Returns:
     int: The decoded value.
   '''
-  if not _is_int(bencode):
-    raise exceptions.InvalidBencode('Failed to convert Bencode to an int.'
-      'Expected format: i<integer encoded in base ten ASCII>e.')
+  _check_bencode_type(bencode, _is_int,
+    expected_format='i<integer encoded in base ten ASCII>e')
   return to_int(bencode)
 
 
@@ -54,9 +53,8 @@ def to_byte_string(bencode):
   Returns:
     bytes: The decoded value.
   '''
-  if not _is_byte_string(bencode):
-    raise exceptions.InvalidBencode('Failed to convert Bencode to a byte'
-      ' string. Expected format: <length>:<contents>.')
+  _check_bencode_type(bencode, _is_byte_string,
+    expected_format='<length>:<contents>')
   return _to_byte_string(bencode)
 
 
@@ -70,9 +68,7 @@ def to_list(bencode):
   Returns:
     list: The decoded value.
   '''
-  if not _is_list(bencode):
-    raise exceptions.InvalidBencode('Failed to convert Bencode to a list.'
-      'Expected format: l<contents>e.')
+  _check_bencode_type(bencode, _is_list, expected_format='l<contents>e')
   return _to_list(bencode)
 
 
@@ -86,9 +82,7 @@ def to_dict(bencode):
   Returns:
     dict: The decoded value.
   '''
-  if not _is_dict(bencode):
-    raise exceptions.InvalidBencode('Failed to convert Bencode to a dict.'
-      'Expected format: d<contents>e.')
+  _check_bencode_type(bencode, _is_dict, expected_format='d<contents>e')
   return _to_dict(bencode)
 
 
@@ -124,3 +118,9 @@ def _to_list(bencode):
 
 def _to_dict(bencode):
   pass
+
+
+def _check_bencode_type(bencode, predicate, expected_format):
+  if not bencode or not predicate(bencode):
+    raise exceptions.InvalidBencode('Failed to convert a Bencode to an int.'
+      f' Expected a Bencode string in the format: {expected_format}')
