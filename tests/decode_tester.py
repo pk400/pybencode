@@ -22,6 +22,9 @@ class DecodeToIntTester(unittest.TestCase):
   def test_decode_simple_int(self):
     self.assertEqual(decode('i42e'), 42)
 
+  def test_decode_negative_int(self):
+    self.assertEqual(decode('i-42e'), -42)
+
 
 class DecodeToByteStringTester(unittest.TestCase):
   pass

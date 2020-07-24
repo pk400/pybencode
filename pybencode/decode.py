@@ -88,7 +88,7 @@ def to_dict(bencode):
 
 def _is_int(bencode):
   return bencode[0] == 'i' and bencode[-1] == 'e' \
-    and bencode[1:len(bencode) - 1].isdigit()
+    and bencode[(2 if bencode[1] == '-' else 1):len(bencode) - 1].isdigit()
 
 
 def _is_byte_string(bencode):
