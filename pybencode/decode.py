@@ -11,6 +11,8 @@ def decode(bencode):
   Raises:
     TypeError: If not a valid Bencode.
   '''
+  if not bencode:
+    raise TypeError('Bencode string cannot be empty.')
   if _is_int(bencode):
     return to_int(bencode)
   elif _is_list(bencode):
@@ -19,8 +21,7 @@ def decode(bencode):
     return to_dict(bencode)
   elif _is_byte_string(bencode):
     return to_byte_string(bencode)
-  raise TypeError('Failed to decode the Bencode string. Unable to read its \
-    contents.')
+  raise TypeError('Failed to decode the Bencode string. Unsupported type.')
 
 
 def to_int(bencode):
