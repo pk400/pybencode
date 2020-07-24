@@ -40,8 +40,8 @@ def to_int(bencode):
   '''
   if not _is_int(bencode):
     raise exceptions.InvalidBencode('Failed to convert Bencode to an int.'
-      'Expected format: i<integer encoded in base ten ASCII>e')
-  _to_int(bencode)
+      'Expected format: i<integer encoded in base ten ASCII>e.')
+  return to_int(bencode)
 
 
 def to_byte_string(bencode):
@@ -54,7 +54,10 @@ def to_byte_string(bencode):
   Returns:
     bytes: The decoded value.
   '''
-  pass
+  if not _is_byte_string(bencode):
+    raise exceptions.InvalidBencode('Failed to convert Bencode to a byte'
+      ' string. Expected format: <length>:<contents>.')
+  return _to_byte_string(bencode)
 
 
 def to_list(bencode):
@@ -67,7 +70,10 @@ def to_list(bencode):
   Returns:
     list: The decoded value.
   '''
-  pass
+  if not _is_list(bencode):
+    raise exceptions.InvalidBencode('Failed to convert Bencode to a list.'
+      'Expected format: l<contents>e.')
+  return _to_list(bencode)
 
 
 def to_dict(bencode):
@@ -80,7 +86,10 @@ def to_dict(bencode):
   Returns:
     dict: The decoded value.
   '''
-  pass
+  if not _is_dict(bencode):
+    raise exceptions.InvalidBencode('Failed to convert Bencode to a dict.'
+      'Expected format: d<contents>e.')
+  return _to_dict(bencode)
 
 
 def _is_int(bencode):
