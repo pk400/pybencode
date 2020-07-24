@@ -17,13 +17,13 @@ def decode(bencode):
   if not bencode:
     raise exceptions.InvalidBencode('Bencode string cannot be empty.')
   if _is_int(bencode):
-    return to_int(bencode)
+    return _to_int(bencode)
   elif _is_list(bencode):
-    return to_list(bencode)
+    return _to_list(bencode)
   elif _is_dict(bencode):
-    return to_dict(bencode)
+    return _to_dict(bencode)
   elif _is_byte_string(bencode):
-    return to_byte_string(bencode)
+    return _to_byte_string(bencode)
   raise exceptions.InvalidBencode('Failed to decode the Bencode string.'
     ' Unsupported type.')
 
@@ -38,7 +38,10 @@ def to_int(bencode):
   Returns:
     int: The decoded value.
   '''
-  return int(bencode[1:len(bencode) - 1])
+  if not _is_int(bencode):
+    raise exceptions.InvalidBencode('Failed to convert Bencode to an int.'
+      'Expected format: i<integer encoded in base ten ASCII>e')
+  _to_int(bencode)
 
 
 def to_byte_string(bencode):
@@ -96,3 +99,19 @@ def _is_list(bencode):
 
 def _is_dict(bencode):
   return bencode[0] == 'd' and bencode[-1] == 'e'
+
+
+def _to_int(bencode):
+  return int(bencode[1:len(bencode) - 1])
+
+
+def _to_byte_string(bencode):
+  pass
+
+
+def _to_list(bencode):
+  pass
+
+
+def _to_dict(bencode):
+  pass
