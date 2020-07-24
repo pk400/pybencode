@@ -1,3 +1,6 @@
+from pybencode import exceptions
+
+
 def decode(bencode):
   '''
   Convert a Bencoded to a primitive type.
@@ -12,7 +15,7 @@ def decode(bencode):
     TypeError: If not a valid Bencode.
   '''
   if not bencode:
-    raise TypeError('Bencode string cannot be empty.')
+    raise exceptions.InvalidBencode('Bencode string cannot be empty.')
   if _is_int(bencode):
     return to_int(bencode)
   elif _is_list(bencode):
@@ -21,7 +24,8 @@ def decode(bencode):
     return to_dict(bencode)
   elif _is_byte_string(bencode):
     return to_byte_string(bencode)
-  raise TypeError('Failed to decode the Bencode string. Unsupported type.')
+  raise exceptions.InvalidBencode('Failed to decode the Bencode string.'
+    ' Unsupported type.')
 
 
 def to_int(bencode):
