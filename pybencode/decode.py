@@ -11,7 +11,16 @@ def decode(bencode):
   Raises:
     TypeError: If not a valid Bencode.
   '''
-  pass
+  if _is_int(bencode):
+    return to_int(bencode)
+  elif _is_list(bencode):
+    return to_list(bencode)
+  elif _is_dict(bencode):
+    return to_dict(bencode)
+  elif _is_byte_string(bencode):
+    return to_byte_string(bencode)
+  raise TypeError('Failed to decode the Bencode string. Unable to read its \
+    contents.')
 
 
 def to_int(bencode):
@@ -64,3 +73,20 @@ def to_dict(bencode):
     dict: The decoded value.
   '''
   pass
+
+
+def _is_int(bencode):
+  return bencode[0] == 'i' and bencode[-1] == 'e'
+
+
+def _is_byte_string(bencode):
+  parts = bencode.split(':')
+  return len(parts) > 1 and isinstance(parts[0], int) and len(parts[1]) > 0
+
+
+def _is_list(bencode):
+  return bencode[0] == 'k' and bencode[-1] == 'e'
+
+
+def _is_dict(bencode):
+  return bencode[0] == 'd' and bencode[-1] == 'e'
