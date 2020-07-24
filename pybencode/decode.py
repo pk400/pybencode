@@ -93,11 +93,11 @@ def _is_int(bencode):
 
 def _is_byte_string(bencode):
   parts = bencode.split(':')
-  return len(parts) > 1 and isinstance(parts[0], int) and len(parts[1]) > 0
+  return len(parts) > 1 and parts[0].isdigit() and len(parts[1]) > 0
 
 
 def _is_list(bencode):
-  return bencode[0] == 'k' and bencode[-1] == 'e'
+  return bencode[0] == 'l' and bencode[-1] == 'e'
 
 
 def _is_dict(bencode):
@@ -109,15 +109,31 @@ def _to_int(bencode):
 
 
 def _to_byte_string(bencode):
-  pass
+  return bencode.split(':')[1]
 
 
 def _to_list(bencode):
-  pass
+  size = len(bencode)
+  contents = bencode[1:size - 1]
+  decoded = []
+  for index, char in enumerate(contents):
+    if char == 'i':
+      decoded.append(_get_int_from_substring(contents[index + 1:]))
+  return decoded
 
 
 def _to_dict(bencode):
   pass
+
+
+def _get_int_from_substring(substring):
+  for index, char in enumerate(substring):
+    if char == 'e':
+      break
+    if not char.isdigit():
+      raise exceptions.InvalidBencode('Failed to convert bencode to int.'
+        f' Expected an int but found a {type(char)}.')
+  return int(substring[:index])
 
 
 def _check_bencode_type(bencode, predicate, expected_format):

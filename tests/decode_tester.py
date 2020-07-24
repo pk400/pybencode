@@ -27,11 +27,22 @@ class DecodeToIntTester(unittest.TestCase):
 
 
 class DecodeToByteStringTester(unittest.TestCase):
-  pass
+  def test_empty_string_to_byte_string(self):
+    self.assertRaises(exceptions.InvalidBencode, to_byte_string, '')
+
+  def test_invalid_bencode_to_byte_string(self):
+    self.assertRaises(exceptions.InvalidBencode, to_byte_string, ':')
+    self.assertRaises(exceptions.InvalidBencode, to_byte_string, 'x:')
+    self.assertRaises(exceptions.InvalidBencode, to_byte_string, ':x')
+    self.assertRaises(exceptions.InvalidBencode, to_byte_string, 'x:x')
 
 
 class DecodeToListTester(unittest.TestCase):
-  pass
+  def test_list_of_int(self):
+    self.assertListEqual(decode('li42ei0ei999ee'), [42, 0, 999])
+
+  def test_invalid_int_found(self):
+    self.assertRaises(exceptions.InvalidBencode, to_list, 'li0A0ee')
 
 
 class DecodeToDictTester(unittest.TestCase):
