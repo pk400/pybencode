@@ -46,7 +46,7 @@ class DecodeToListTester(unittest.TestCase):
 
   def test_nested_lists(self):
     self.assertListEqual(decode('lli42eee'), [[42]])
-    self.assertListEqual(decode('lli42eli99eeee'), [[42], [99]])
+    self.assertListEqual(decode('lli42eli99ei200eeee'), [[42, [99, 200]]])
 
 
 class DecodeToDictTester(unittest.TestCase):

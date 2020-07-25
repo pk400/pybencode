@@ -40,7 +40,7 @@ def to_int(bencode):
   '''
   _check_bencode_type(bencode, _is_int,
     expected_format='i<integer encoded in base ten ASCII>e')
-  return to_int(bencode)
+  return _to_int(bencode)
 
 
 def to_byte_string(bencode):
@@ -123,6 +123,7 @@ def _to_list(bencode, start_index=1):
       content = ''
       for index in range(index + 1, size):
         if bencode[index] == 'e':
+          index += 1
           break
         elif not bencode[index].isdigit():
           raise exceptions.InvalidBencode('Failed to convert bencode to int.'
