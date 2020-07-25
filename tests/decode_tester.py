@@ -44,6 +44,10 @@ class DecodeToListTester(unittest.TestCase):
   def test_invalid_int_found(self):
     self.assertRaises(exceptions.InvalidBencode, to_list, 'li0A0ee')
 
+  def test_nested_lists(self):
+    self.assertListEqual(decode('lli42eee'), [[42]])
+    self.assertListEqual(decode('lli42eli99eeee'), [[42], [99]])
+
 
 class DecodeToDictTester(unittest.TestCase):
   pass

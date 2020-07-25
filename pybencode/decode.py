@@ -19,7 +19,7 @@ def decode(bencode):
   if _is_int(bencode):
     return _to_int(bencode)
   elif _is_list(bencode):
-    return _to_list(bencode)
+    return _to_list(bencode)[0]
   elif _is_dict(bencode):
     return _to_dict(bencode)
   elif _is_byte_string(bencode):
@@ -69,7 +69,7 @@ def to_list(bencode):
     list: The decoded value.
   '''
   _check_bencode_type(bencode, _is_list, expected_format='l<contents>e')
-  return _to_list(bencode)
+  return _to_list(bencode)[0]
 
 
 def to_dict(bencode):
@@ -112,28 +112,33 @@ def _to_byte_string(bencode):
   return bencode.split(':')[1]
 
 
-def _to_list(bencode):
+def _to_list(bencode, start_index=1):
   size = len(bencode)
-  contents = bencode[1:size - 1]
   decoded = []
-  for index, char in enumerate(contents):
-    if char == 'i':
-      decoded.append(_get_int_from_substring(contents[index + 1:]))
-  return decoded
+  index = start_index
+  while index < size:
+    if bencode[index] == 'e':
+      break
+    elif bencode[index] == 'i':
+      content = ''
+      for index in range(index + 1, size):
+        if bencode[index] == 'e':
+          break
+        elif not bencode[index].isdigit():
+          raise exceptions.InvalidBencode('Failed to convert bencode to int.'
+            f' Expected an int but found a {type(bencode[index])}.')
+        content += bencode[index]
+      decoded.append(int(content))
+    elif bencode[index] == 'l':
+      content, index = _to_list(bencode, index + 1)
+      decoded.append(content)
+    elif bencode[index] == 'd':
+      pass
+  return decoded, index + 1
 
 
 def _to_dict(bencode):
   pass
-
-
-def _get_int_from_substring(substring):
-  for index, char in enumerate(substring):
-    if char == 'e':
-      break
-    if not char.isdigit():
-      raise exceptions.InvalidBencode('Failed to convert bencode to int.'
-        f' Expected an int but found a {type(char)}.')
-  return int(substring[:index])
 
 
 def _check_bencode_type(bencode, predicate, expected_format):
