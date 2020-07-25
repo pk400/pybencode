@@ -57,6 +57,7 @@ pybencode also includes unit tests. From the project root:
 
 # Exceptions
 `PyBencodeException`: Is the base exception used throughout pybencode.
+
 `InvalidBencode`: Is raised when an invalid Bencode string is passed as input to a decode function.
 
 ```
