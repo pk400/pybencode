@@ -1,6 +1,8 @@
-class BasePyBencodeException(Exception):
+class PyBencodeException(Exception):
+  '''Base exception for pybencode.'''
   pass
 
 
-class InvalidBencode(BasePyBencodeException):
+class InvalidBencode(PyBencodeException):
+  '''Raised when pybencode failed to decode a Bencode string.'''
   pass
